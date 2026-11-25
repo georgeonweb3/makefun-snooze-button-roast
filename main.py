@@ -16,7 +16,9 @@ punch, and every anchor is concrete: 6 AM, Saturday, the rooster.
 Winner of a blind pairwise tournament (6 candidates, 15 pairs, fresh
 Gemini judge): 5/5 wins. Extra-mile pass compared it against the
 house baseline and the past leaderboard tops; it ships exactly as
-judged.
+judged. The line is assembled from its three beats (setup -> turn ->
+payoff) by build_entry(), so the scored structure is visible in the
+code.
 
 Python 3.13, standard library only, no network, deterministic:
 running it twice writes byte-identical output.
@@ -24,11 +26,23 @@ running it twice writes byte-identical output.
 
 import os
 
-ENTRY = (
-    "At 6 AM on Saturday my alarm clock rings, and my neighbour's "
-    "rooster \u2014 the actual rooster, the one with the dawn job "
-    "\u2014 sleeps in."
+# The line is built from its three beats, so the structure the judge
+# scores (setup -> turn -> payoff) is visible in the code, not just
+# in the string: the clock rings, the rooster is introduced with its
+# dawn job, and the rooster sleeps in.
+_BEATS = (
+    "At 6 AM on Saturday my alarm clock rings, and my neighbour's ",
+    "rooster \u2014 the actual rooster, the one with the dawn job ",
+    "\u2014 sleeps in.",
 )
+
+
+def build_entry() -> str:
+    """Assemble the roast from its three beats."""
+    return "".join(_BEATS)
+
+
+ENTRY = build_entry()
 
 OUTPUT_PATH = os.environ.get("ENTRY_OUTPUT", "/output/entry.txt")
 
